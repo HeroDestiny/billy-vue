@@ -1,47 +1,58 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="container mt-5">
+    <h1 class="text-center">Lista de Tarefas</h1>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <!-- Campo de Entrada para Nova Tarefa -->
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Nova tarefa" v-model="novaTarefa" @keyup.enter="adicionarTarefa">
+      <div class="input-group-text">
+        <button class="btn btn-primary" @click="adicionarTarefa">Adicionar</button>
+      </div>
     </div>
-  </header>
 
-  <main>
-    <TheWelcome />
-  </main>
+    <!-- Lista de Tarefas -->
+    <ul class="list-group">
+      <li v-for="(tarefa, index) in tarefas" :key="index" class="list-group-item d-flex justify-content-between align-items-center">
+        <span :class="{'text-decoration-line-through': tarefa.concluida}">{{ tarefa.nome }}</span>
+        <div>
+          <button class="btn btn-success btn-sm mr-2" @click="marcarConcluida(index)" v-if="!tarefa.concluida">Concluir</button>
+          <button class="btn btn-danger btn-sm" @click="removerTarefa(index)">Remover</button>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
+<script>
+export default {
+  name: 'App',
+  data() {
+    return {
+      novaTarefa: '',
+      tarefas: []
+    }
+  },
+  methods: {
+    // Método para adicionar nova tarefa
+    adicionarTarefa() {
+      if (this.novaTarefa.trim() === '') {
+        return;
+      }
+      this.tarefas.push({ nome: this.novaTarefa, concluida: false });
+      this.novaTarefa = ''; // Limpa o campo de entrada
+    },
+    // Método para marcar tarefa como concluída
+    marcarConcluida(index) {
+      this.tarefas[index].concluida = true;
+    },
+    // Método para remover tarefa
+    removerTarefa(index) {
+      this.tarefas.splice(index, 1);
+    }
+  }
+}
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
+/* Estilos personalizados (se necessário) */
 </style>

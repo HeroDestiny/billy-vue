@@ -1,116 +1,144 @@
-# Fundamentos do Framework Vue.js
+# Vue.js Data Binding
 
-### O que é o Vue.js?
+### O que é Data Binding?
 
-O Vue.js é um framework progressivo para a construção de interfaces de usuário. Diferente de frameworks monolíticos, ele foi projetado para ser adotado de forma incremental. Seu foco principal é a camada de visualização, tornando-o fácil de integrar com outros projetos ou bibliotecas.
+O Data Binding é uma funcionalidade essencial do Vue.js. Ele permite que você conecte os dados do modelo (**dados do componente**) com o template (**interface do usuário**), garantindo que qualquer alteração feita nos dados seja refletida automaticamente na interface e vice-versa.
 
-### Por que usar o Vue.js?
+No Vue.js, existem dois tipos principais de data binding: **One-Way Data Binding** e **Two-Way Data Binding**.
 
-- **Simplicidade**: A curva de aprendizado do Vue.js é mais suave em comparação com outros frameworks como Angular e React.
-- **Reatividade**: O sistema de reatividade embutido permite a sincronização automática de dados com a interface.
-- **Flexibilidade**: Pode ser utilizado tanto para pequenos componentes quanto para aplicações complexas de grande porte.
-- **Performance**: Seu tamanho reduzido e desempenho otimizado garantem carregamentos rápidos.
-- **Ecossistema e comunidade ativa**: O Vue.js conta com uma ampla comunidade e diversas bibliotecas que expandem suas funcionalidades.
+### Interpolation `{{ }}`
 
-### Principais Características
+A interpolação permite exibir valores do modelo no template dentro de elementos HTML.
 
-- **Template Declarativo**: O Vue.js utiliza um sistema de templates baseado em HTML, que é compilado em funções JavaScript otimizadas.
-- **Componentes**: A arquitetura baseada em componentes promove a reutilização de código e uma melhor organização do projeto.
-- **Diretivas**: Permite estender a funcionalidade do HTML através de diretivas como `v-if`, `v-for` e `v-bind`.
-- **Eventos e Bindings**: Facilita a interação do usuário por meio de eventos e vinculações de dados dinâmicas.
-- **Gerenciamento de Estado**: O Vuex e o Pinia são bibliotecas recomendadas para gerenciar estados globais em aplicações maiores.
-- **Roteamento**: O Vue Router permite a criação de aplicações de página única (SPA) com navegação dinâmica.
-- **Integração com APIs**: O Vue facilita a interação com APIs REST e GraphQL.
-
-### Instalando o Vue.js
-
-Para iniciar um projeto com Vue.js, você pode utilizar o Vue CLI, Vite ou incluir o Vue diretamente via CDN.
-
-#### Instalação com Vue CLI
-
-```bash
-npm install -g @vue/cli
-vue create meu-projeto
-cd meu-projeto
-npm run serve
-```
-
-#### Instalação com Vite (mais recomendado)
-
-```bash
-npm create vite@latest meu-projeto --template vue
-cd meu-projeto
-npm install
-npm run dev
-```
-
-#### Uso com CDN (mais simples)
+Exemplo:
 
 ```html
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<h1>{{ titulo }}</h1>
+<p>{{ descricao }}</p>
 ```
 
-### Criando um Componente Vue
+### Property Binding `v-bind`
 
-O Vue.js utiliza componentes para estruturar a interface. Aqui está um exemplo básico de um componente Vue:
+O Property Binding permite vincular valores das propriedades do modelo a atributos de elementos HTML usando a diretiva `v-bind`.
 
-```vue
-<template>
-  <div>
-    <h1>{{ mensagem }}</h1>
-    <button @click="alterarMensagem">Clique aqui</button>
-  </div>
-</template>
+Exemplo:
 
-<script>
-export default {
-  data() {
-    return {
-      mensagem: "Olá, Vue!"
-    };
-  },
-  methods: {
-    alterarMensagem() {
-      this.mensagem = "Você clicou no botão!";
-    }
-  }
-};
-</script>
-
-<style scoped>
-h1 {
-  color: blue;
-}
-</style>
+```html
+<button v-bind:disabled="isBotaoDesabilitado">Clique aqui</button>
 ```
 
-### Estrutura de um Projeto Vue.js
+ou de forma abreviada:
 
-Ao criar um projeto Vue, a estrutura se assemelha a esta:
-
-```
-meu-projeto/
-  |- node_modules/
-  |- public/
-  |- src/
-  |  |- assets/
-  |  |- components/
-  |  |- views/
-  |  |- App.vue
-  |  |- main.js
-  |- package.json
-  |- vite.config.js
+```html
+<button :disabled="isBotaoDesabilitado">Clique aqui</button>
 ```
 
-Explicação:
+### Event Binding `v-on`
 
-- **src/**: Contém os arquivos fonte do projeto.
-- **components/**: Contém componentes reutilizáveis.
-- **views/**: Contém as páginas principais da aplicação.
-- **App.vue**: Componente raiz da aplicação.
-- **main.js**: Arquivo de entrada que inicializa o Vue.
+O Event Binding permite capturar eventos do usuário e vinculá-los a métodos do componente usando `v-on` ou seu atalho `@`.
 
-### Conclusão
+Exemplo:
 
-O Vue.js é um framework versátil e poderoso para criação de interfaces modernas. Com sua abordagem intuitiva e reativa, ele permite um desenvolvimento eficiente e organizado. Seja para pequenos projetos ou aplicações complexas, o Vue.js é uma excelente escolha.
+```html
+<button v-on:click="botaoClicado">Clique aqui</button>
+```
+
+Ou de forma abreviada:
+
+```html
+<button @click="botaoClicado">Clique aqui</button>
+```
+
+### Two-Way Binding `v-model`
+
+O Two-Way Binding mantém a sincronização bidirecional entre o modelo e o template. Qualquer alteração no modelo ou no template refletirá automaticamente no outro.
+
+Exemplo:
+
+```html
+<input v-model="nome">
+<p>Olá, {{ nome }}!</p>
+```
+
+**Observações sobre Data Binding:**
+
+- O Data Binding facilita a comunicação entre o modelo e a interface do usuário, tornando o desenvolvimento mais intuitivo.
+- O Two-Way Binding é particularmente útil para formulários e inputs.
+- O `v-bind` e o `v-on` podem ser combinados para criar interações dinâmicas.
+
+---
+
+## Class e Style Binding no Vue.js
+
+Além do data binding tradicional, o Vue.js oferece funcionalidades adicionais para manipular classes CSS e estilos diretamente no template.
+
+### Class Binding
+
+O Class Binding permite adicionar ou remover classes CSS dinamicamente com base em valores do modelo.
+
+Exemplo:
+
+```html
+<button :class="{ 'botao-destaque': isDestaque }">Clique aqui</button>
+```
+
+Neste exemplo, a classe CSS **'botao-destaque'** será adicionada ao botão se a propriedade **isDestaque** for verdadeira.
+
+Também é possível passar um array de classes:
+
+```html
+<button :class="['classe1', 'classe2']">Clique aqui</button>
+```
+
+### Style Binding
+
+O Style Binding permite definir estilos CSS dinamicamente com base nos valores do modelo.
+
+Exemplo:
+
+```html
+<p :style="{ color: corTexto }">Este texto possui uma cor dinâmica</p>
+```
+
+Neste exemplo, a cor do parágrafo será definida pelo valor da propriedade **corTexto**.
+
+**Aplicando condições com Class e Style Binding**
+
+Podemos usar expressões ternárias para aplicar classes e estilos dinamicamente.
+
+Exemplo:
+
+```html
+<button :class="isDestaque ? 'botao-destaque' : ''">Clique aqui</button>
+```
+
+Ou usar múltiplas condições:
+
+```html
+<button :class="{ 'botao-destaque': isDestaque && !isDesabilitado }">Clique aqui</button>
+```
+
+**Class e Style Binding em Two-Way Binding**
+
+Podemos combinar `v-model` com `class` para criar estilos dinâmicos baseados em entrada do usuário.
+
+```html
+<input v-model="classeCSS" :class="classeCSS">
+```
+
+---
+
+## Prática
+
+Aqui está a sugestão para a prática:
+
+**Tema do Projeto**: Lista de Tarefas
+
+**Descrição**: Criar os templates para uma aplicação de Lista de Tarefas (*To-Do List*), onde os usuários podem adicionar, marcar como concluídas e remover tarefas. A aplicação deve ser desenvolvida usando o Vue.js, aplicando os conceitos aprendidos na aula.
+
+**Requisitos**:
+
+- A aplicação deve ter um componente principal que representará a Lista de Tarefas.
+- O template deve permitir gerenciar as tarefas (adicionar, marcar como concluída, remover).
+- Use [BootStrapCDN](https://getbootstrap.com.br/docs/4.1/getting-started/introduction/) para estilizar o projeto.
 

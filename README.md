@@ -1,144 +1,130 @@
-# Vue.js Data Binding
+## Vue.js Diretivas
 
-### O que é Data Binding?
+As Diretivas são uma parte fundamental do Vue.js, permitindo estender a sintaxe HTML para **adicionar comportamentos** personalizados aos elementos da página.
 
-O Data Binding é uma funcionalidade essencial do Vue.js. Ele permite que você conecte os dados do modelo (**dados do componente**) com o template (**interface do usuário**), garantindo que qualquer alteração feita nos dados seja refletida automaticamente na interface e vice-versa.
+Existem três tipos principais de diretivas no Vue.js:
 
-No Vue.js, existem dois tipos principais de data binding: **One-Way Data Binding** e **Two-Way Data Binding**.
+- Diretivas de Atributo
+- Diretivas de Estrutura
+- Diretivas Personalizadas
 
-### Interpolation `{{ }}`
+### Diretivas de Atributo
 
-A interpolação permite exibir valores do modelo no template dentro de elementos HTML.
+As Diretivas de Atributo são usadas para alterar o comportamento de elementos HTML existentes, adicionando ou modificando atributos e estilos dinamicamente. Elas são aplicadas como atributos de elementos no template.
+
+Exemplos:
+
+```html
+<!-- Diretiva de Atributo v-bind:style -->
+<p :style="{ background: isBlue ? 'blue' : 'red' }">Eu sou uma diretiva de atributo</p>
+```
+
+```html
+<!-- Diretiva de Atributo v-bind:class -->
+<p :class="{ 'fundo-verde': isFlag, 'fundo-azul': !isFlag }">Diretiva de Atributo - v-bind:class</p>
+```
+
+As diretivas **v-bind:style** e **v-bind:class** são usadas para alterar o estilo e as classes de qualquer elemento do DOM com base em alguma condição.
+
+[Documentação Oficial Vue - v-bind](https://vuejs.org/guide/essentials/class-and-style.html)
+
+### Diretivas de Estrutura
+
+As Diretivas de Estrutura são usadas para manipular a estrutura do DOM, adicionando ou removendo elementos HTML do template.
+
+#### Diretiva v-if
 
 Exemplo:
 
 ```html
-<h1>{{ titulo }}</h1>
-<p>{{ descricao }}</p>
+<!-- Diretiva de Estrutura -->
+<div v-if="mostrarElemento">Este elemento só será exibido se mostrarElemento for verdadeiro.</div>
 ```
 
-### Property Binding `v-bind`
+Aqui, **'v-if'** é uma Diretiva de Estrutura que adiciona ou remove o elemento `<div>` com base no valor de **'mostrarElemento'**.
 
-O Property Binding permite vincular valores das propriedades do modelo a atributos de elementos HTML usando a diretiva `v-bind`.
+[Documentação Oficial Vue - v-if](https://vuejs.org/guide/essentials/conditional.html)
+
+#### Diretiva v-for
+
+A diretiva **v-for** permite iterar sobre uma coleção de elementos e renderizá-los no template.
 
 Exemplo:
 
 ```html
-<button v-bind:disabled="isBotaoDesabilitado">Clique aqui</button>
+<div v-for="(item, index) in itens" :key="index">Item {{ index }}: {{ item }}</div>
 ```
 
-ou de forma abreviada:
+Aqui estamos iterando sobre uma coleção chamada **itens**, e para cada item na coleção, o template renderizará um novo **<div>** contendo o valor do item.
+
+[Documentação Oficial Vue - v-for](https://vuejs.org/guide/essentials/list.html)
+
+#### Diretiva v-show
+
+A diretiva **v-show** é usada para mostrar ou ocultar um elemento com base em uma condição, mas sem removê-lo do DOM (diferente do v-if).
 
 ```html
-<button :disabled="isBotaoDesabilitado">Clique aqui</button>
+<p v-show="mostrarTexto">Este parágrafo será exibido se mostrarTexto for verdadeiro.</p>
 ```
 
-### Event Binding `v-on`
+[Documentação Oficial Vue - v-show](https://vuejs.org/guide/essentials/conditional.html#v-show)
 
-O Event Binding permite capturar eventos do usuário e vinculá-los a métodos do componente usando `v-on` ou seu atalho `@`.
+#### Diretiva v-switch (Vue 3)
 
-Exemplo:
+O Vue 3 permite criar lógica de troca de elementos com o `v-if`, `v-else-if` e `v-else`, funcionando de maneira semelhante ao switch-case.
 
 ```html
-<button v-on:click="botaoClicado">Clique aqui</button>
+<div>
+  <p v-if="opcao === 'A'">Você escolheu a opção A</p>
+  <p v-else-if="opcao === 'B'">Você escolheu a opção B</p>
+  <p v-else-if="opcao === 'C'">Você escolheu a opção C</p>
+  <p v-else>Escolha uma opção válida (A, B ou C).</p>
+</div>
 ```
 
-Ou de forma abreviada:
+[Documentação Oficial Vue - Condicionais](https://vuejs.org/guide/essentials/conditional.html)
+
+### Diretivas Personalizadas
+
+Você também pode criar suas próprias Diretivas personalizadas no Vue.js usando a API `directive`.
+
+Exemplo de uma Diretiva Personalizada para destacar um elemento ao passar o mouse:
+
+```javascript
+app.directive('destaque', {
+  beforeMount(el, binding) {
+    el.style.backgroundColor = binding.value || 'yellow';
+    el.addEventListener('mouseenter', () => {
+      el.style.backgroundColor = 'lightgreen';
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.backgroundColor = binding.value || 'yellow';
+    });
+  }
+});
+```
+
+Uso no template:
 
 ```html
-<button @click="botaoClicado">Clique aqui</button>
+<p v-destaque="'lightblue'">Este parágrafo será destacado ao passar o mouse.</p>
 ```
 
-### Two-Way Binding `v-model`
+[Documentação Oficial Vue - Diretivas Personalizadas](https://vuejs.org/guide/reusability/custom-directives.html)
 
-O Two-Way Binding mantém a sincronização bidirecional entre o modelo e o template. Qualquer alteração no modelo ou no template refletirá automaticamente no outro.
+**Considerações Finais**
 
-Exemplo:
-
-```html
-<input v-model="nome">
-<p>Olá, {{ nome }}!</p>
-```
-
-**Observações sobre Data Binding:**
-
-- O Data Binding facilita a comunicação entre o modelo e a interface do usuário, tornando o desenvolvimento mais intuitivo.
-- O Two-Way Binding é particularmente útil para formulários e inputs.
-- O `v-bind` e o `v-on` podem ser combinados para criar interações dinâmicas.
-
----
-
-## Class e Style Binding no Vue.js
-
-Além do data binding tradicional, o Vue.js oferece funcionalidades adicionais para manipular classes CSS e estilos diretamente no template.
-
-### Class Binding
-
-O Class Binding permite adicionar ou remover classes CSS dinamicamente com base em valores do modelo.
-
-Exemplo:
-
-```html
-<button :class="{ 'botao-destaque': isDestaque }">Clique aqui</button>
-```
-
-Neste exemplo, a classe CSS **'botao-destaque'** será adicionada ao botão se a propriedade **isDestaque** for verdadeira.
-
-Também é possível passar um array de classes:
-
-```html
-<button :class="['classe1', 'classe2']">Clique aqui</button>
-```
-
-### Style Binding
-
-O Style Binding permite definir estilos CSS dinamicamente com base nos valores do modelo.
-
-Exemplo:
-
-```html
-<p :style="{ color: corTexto }">Este texto possui uma cor dinâmica</p>
-```
-
-Neste exemplo, a cor do parágrafo será definida pelo valor da propriedade **corTexto**.
-
-**Aplicando condições com Class e Style Binding**
-
-Podemos usar expressões ternárias para aplicar classes e estilos dinamicamente.
-
-Exemplo:
-
-```html
-<button :class="isDestaque ? 'botao-destaque' : ''">Clique aqui</button>
-```
-
-Ou usar múltiplas condições:
-
-```html
-<button :class="{ 'botao-destaque': isDestaque && !isDesabilitado }">Clique aqui</button>
-```
-
-**Class e Style Binding em Two-Way Binding**
-
-Podemos combinar `v-model` com `class` para criar estilos dinâmicos baseados em entrada do usuário.
-
-```html
-<input v-model="classeCSS" :class="classeCSS">
-```
-
----
+As Diretivas são um recurso poderoso do Vue.js, permitindo criar comportamentos personalizados e reutilizáveis no template. Ao combiná-las com recursos como Data Binding e Componentes, você pode criar aplicações web mais interativas e dinâmicas.
 
 ## Prática
 
 Aqui está a sugestão para a prática:
 
-**Tema do Projeto**: Lista de Tarefas
+**Tema do Projeto:** Lista de Tarefas
 
-**Descrição**: Criar os templates para uma aplicação de Lista de Tarefas (*To-Do List*), onde os usuários podem adicionar, marcar como concluídas e remover tarefas. A aplicação deve ser desenvolvida usando o Vue.js, aplicando os conceitos aprendidos na aula.
+**Descrição:** Criar uma aplicação de Lista de Tarefas (*To-Do List*), onde os usuários podem adicionar, marcar como concluídas e remover tarefas. A aplicação deve ser desenvolvida usando Vue.js, aplicando os conceitos aprendidos na aula.
 
-**Requisitos**:
+**Requisitos:**
 
-- A aplicação deve ter um componente principal que representará a Lista de Tarefas.
-- O template deve permitir gerenciar as tarefas (adicionar, marcar como concluída, remover).
-- Use [BootStrapCDN](https://getbootstrap.com.br/docs/4.1/getting-started/introduction/) para estilizar o projeto.
+- Incluir os conceitos de diretivas (`v-if`, `v-for`, `v-bind:class`) na aplicação.
 

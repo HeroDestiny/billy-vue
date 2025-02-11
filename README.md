@@ -1,120 +1,212 @@
-## Vue.js Diretivas
+## Vue.js Componentes
 
-As Diretivas são uma parte fundamental do Vue.js, permitindo estender a sintaxe HTML para **adicionar comportamentos** personalizados aos elementos da página.
+Os componentes são blocos de construção essenciais do Vue.js. Eles desempenham um papel central na arquitetura do framework, permitindo que você crie partes reutilizáveis e independentes da interface do usuário, cada uma com sua própria lógica, template e estilo.
 
-Existem três tipos principais de diretivas no Vue.js:
+### Criando um Componente
 
-- Diretivas de Atributo
-- Diretivas de Estrutura
-- Diretivas Personalizadas
+Para criar um novo componente, basta criar um arquivo `.vue` dentro da pasta `components` do seu projeto Vue.
 
-### Diretivas de Atributo
+**Estrutura de um Componente:**
 
-As Diretivas de Atributo são usadas para alterar o comportamento de elementos HTML existentes, adicionando ou modificando atributos e estilos dinamicamente. Elas são aplicadas como atributos de elementos no template.
+O código de um componente em Vue.js consiste em três partes principais:
 
-Exemplos:
-
-```html
-<!-- Diretiva de Atributo v-bind:style -->
-<p :style="{ background: isBlue ? 'blue' : 'red' }">Eu sou uma diretiva de atributo</p>
-```
-
-```html
-<!-- Diretiva de Atributo v-bind:class -->
-<p :class="{ 'fundo-verde': isFlag, 'fundo-azul': !isFlag }">Diretiva de Atributo - v-bind:class</p>
-```
-
-As diretivas **v-bind:style** e **v-bind:class** são usadas para alterar o estilo e as classes de qualquer elemento do DOM com base em alguma condição.
-
-[Documentação Oficial Vue - v-bind](https://vuejs.org/guide/essentials/class-and-style.html)
-
-### Diretivas de Estrutura
-
-As Diretivas de Estrutura são usadas para manipular a estrutura do DOM, adicionando ou removendo elementos HTML do template.
-
-#### Diretiva v-if
+- A seção `<template>` (HTML do componente)
+- A seção `<script>` (lógica do componente)
+- A seção `<style>` (estilos do componente)
 
 Exemplo:
 
-```html
-<!-- Diretiva de Estrutura -->
-<div v-if="mostrarElemento">Este elemento só será exibido se mostrarElemento for verdadeiro.</div>
-```
+```vue
+<template>
+  <div>
+    <h1>{{ titulo }}</h1>
+  </div>
+</template>
 
-Aqui, **'v-if'** é uma Diretiva de Estrutura que adiciona ou remove o elemento `<div>` com base no valor de **'mostrarElemento'**.
-
-[Documentação Oficial Vue - v-if](https://vuejs.org/guide/essentials/conditional.html)
-
-#### Diretiva v-for
-
-A diretiva **v-for** permite iterar sobre uma coleção de elementos e renderizá-los no template.
-
-Exemplo:
-
-```html
-<div v-for="(item, index) in itens" :key="index">Item {{ index }}: {{ item }}</div>
-```
-
-Aqui estamos iterando sobre uma coleção chamada **itens**, e para cada item na coleção, o template renderizará um novo **<div>** contendo o valor do item.
-
-[Documentação Oficial Vue - v-for](https://vuejs.org/guide/essentials/list.html)
-
-#### Diretiva v-show
-
-A diretiva **v-show** é usada para mostrar ou ocultar um elemento com base em uma condição, mas sem removê-lo do DOM (diferente do v-if).
-
-```html
-<p v-show="mostrarTexto">Este parágrafo será exibido se mostrarTexto for verdadeiro.</p>
-```
-
-[Documentação Oficial Vue - v-show](https://vuejs.org/guide/essentials/conditional.html#v-show)
-
-#### Diretiva v-switch (Vue 3)
-
-O Vue 3 permite criar lógica de troca de elementos com o `v-if`, `v-else-if` e `v-else`, funcionando de maneira semelhante ao switch-case.
-
-```html
-<div>
-  <p v-if="opcao === 'A'">Você escolheu a opção A</p>
-  <p v-else-if="opcao === 'B'">Você escolheu a opção B</p>
-  <p v-else-if="opcao === 'C'">Você escolheu a opção C</p>
-  <p v-else>Escolha uma opção válida (A, B ou C).</p>
-</div>
-```
-
-[Documentação Oficial Vue - Condicionais](https://vuejs.org/guide/essentials/conditional.html)
-
-### Diretivas Personalizadas
-
-Você também pode criar suas próprias Diretivas personalizadas no Vue.js usando a API `directive`.
-
-Exemplo de uma Diretiva Personalizada para destacar um elemento ao passar o mouse:
-
-```javascript
-app.directive('destaque', {
-  beforeMount(el, binding) {
-    el.style.backgroundColor = binding.value || 'yellow';
-    el.addEventListener('mouseenter', () => {
-      el.style.backgroundColor = 'lightgreen';
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.backgroundColor = binding.value || 'yellow';
-    });
+<script>
+export default {
+  data() {
+    return {
+      titulo: "Olá, Vue!"
+    };
   }
-});
+};
+</script>
+
+<style scoped>
+h1 {
+  color: blue;
+}
+</style>
 ```
 
-Uso no template:
+### Usando um Componente
 
-```html
-<p v-destaque="'lightblue'">Este parágrafo será destacado ao passar o mouse.</p>
+Para usar um componente dentro de outro, basta importá-lo e registrá-lo no objeto `components`.
+
+Exemplo:
+
+```vue
+<template>
+  <div>
+    <MeuComponente />
+  </div>
+</template>
+
+<script>
+import MeuComponente from "@/components/MeuComponente.vue";
+
+export default {
+  components: {
+    MeuComponente
+  }
+};
+</script>
 ```
 
-[Documentação Oficial Vue - Diretivas Personalizadas](https://vuejs.org/guide/reusability/custom-directives.html)
+### Comunicação entre Componentes
 
-**Considerações Finais**
+Os componentes podem se comunicar entre si através de `props` e `events`.
 
-As Diretivas são um recurso poderoso do Vue.js, permitindo criar comportamentos personalizados e reutilizáveis no template. Ao combiná-las com recursos como Data Binding e Componentes, você pode criar aplicações web mais interativas e dinâmicas.
+#### Props (Entrada de Dados)
+
+Permitem que um componente pai passe dados para um componente filho.
+
+_Componente Filho:_
+
+```vue
+<template>
+  <p>{{ mensagem }}</p>
+</template>
+
+<script>
+export default {
+  props: ["mensagem"]
+};
+</script>
+```
+
+_Componente Pai:_
+
+```vue
+<template>
+  <MeuFilho :mensagem="mensagemDoPai" />
+</template>
+
+<script>
+import MeuFilho from "@/components/MeuFilho.vue";
+
+export default {
+  components: { MeuFilho },
+  data() {
+    return {
+      mensagemDoPai: "Olá do Pai!"
+    };
+  }
+};
+</script>
+```
+
+#### Emitindo Eventos (Saída de Dados)
+
+Permitem que um componente filho envie eventos para um componente pai.
+
+_Componente Filho:_
+
+```vue
+<template>
+  <button @click="enviarMensagem">Enviar Mensagem</button>
+</template>
+
+<script>
+export default {
+  emits: ["mensagemEnviada"],
+  methods: {
+    enviarMensagem() {
+      this.$emit("mensagemEnviada", "Mensagem do Filho");
+    }
+  }
+};
+</script>
+```
+
+_Componente Pai:_
+
+```vue
+<template>
+  <MeuFilho @mensagemEnviada="acaoNoPai" />
+</template>
+
+<script>
+import MeuFilho from "@/components/MeuFilho.vue";
+
+export default {
+  components: { MeuFilho },
+  methods: {
+    acaoNoPai(evento) {
+      alert(evento);
+    }
+  }
+};
+</script>
+```
+
+[Documentação Oficial Vue - Props & Events](https://vuejs.org/guide/components/props.html)
+
+### Ciclo de Vida de um Componente Vue.js
+
+O Vue fornece uma série de eventos de ciclo de vida que ocorrem desde a criação até a destruição de um componente.
+
+#### `mounted`
+
+Chamado após a montagem do componente.
+
+```vue
+<script>
+export default {
+  mounted() {
+    console.log("Componente montado!");
+  }
+};
+</script>
+```
+
+#### `watch`
+
+O watch permite monitorar mudanças em propriedades específicas do componente.
+
+```vue
+<script>
+export default {
+  data() {
+    return {
+      contador: 0
+    };
+  },
+  watch: {
+    contador(novoValor) {
+      console.log("Contador atualizado para: ", novoValor);
+    }
+  }
+};
+</script>
+```
+
+#### `beforeUnmount`
+
+Chamado antes de um componente ser destruído.
+
+```vue
+<script>
+export default {
+  beforeUnmount() {
+    console.log("Componente será destruído!");
+  }
+};
+</script>
+```
+
+[Documentação Oficial Vue - Lifecycle](https://vuejs.org/guide/essentials/lifecycle.html)
 
 ## Prática
 
@@ -126,5 +218,7 @@ Aqui está a sugestão para a prática:
 
 **Requisitos:**
 
-- Incluir os conceitos de diretivas (`v-if`, `v-for`, `v-bind:class`) na aplicação.
+- Criar um componente para o cabeçalho do sistema;
+- Criar um componente para o input de inclusão de tarefas;
+- Criar um componente de apresentação das tarefas em uma lista.
 
